@@ -1,0 +1,12 @@
+== mcMMO-extras
+**Command line tool for managing mcMMO servers**
+
+=== Forums
+http://forums.mcmmo.info Talk with developers and the community about mcMMO here
+
+=== Compiling
+
+Required Libraries:
+* mcMMO
+
+Maven 3 is required to compile this program
