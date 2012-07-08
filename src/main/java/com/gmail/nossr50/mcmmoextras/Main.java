@@ -14,7 +14,7 @@ public class Main {
 			}
 			if (args[2].equalsIgnoreCase("analyze")) {
 				Chunklets chunklets = new Chunklets();
-				chunklets.analyze(args[1]);
+				chunklets.analyze(args[1], false);
 				return;
 			}
 		}

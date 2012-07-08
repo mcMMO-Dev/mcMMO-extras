@@ -17,7 +17,7 @@ import com.gmail.nossr50.util.blockmeta.PrimitiveChunkletStore;
 public class Chunklets {
 	Map<String, ChunkletStore> chunklets = new HashMap<String, ChunkletStore>();
 
-	public void analyze(String worldLocation) {
+	public void analyze(String worldLocation, boolean store) {
 		File worldDir = new File(worldLocation);
 		if(!worldDir.exists()) {
 			System.out.println("Cannot find world at: " + worldDir.getPath());
@@ -138,7 +138,7 @@ public class Chunklets {
 				notChunklets.add(chunklet.getPath());
 			} else {
 				chunkletStores.add(cStore);
-				chunklets.put(chunklet.getPath(), cStore);
+				if(store) chunklets.put(chunklet.getPath(), cStore);
 			}
 
 			Main.updateProgress((double) i / chunkletLocations.size());
