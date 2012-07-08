@@ -1,7 +1,12 @@
 package com.gmail.nossr50.mcmmoextras;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+
+import com.gmail.nossr50.util.blockmeta.ChunkletStore;
 
 public class Chunklets {
 	public static void analyze(String worldLocation) {
@@ -106,5 +111,76 @@ public class Chunklets {
 
 		System.out.println("Chunklets are is using: " + size + " bytes.");
 		System.out.println("Average Chunklet size is: " + (size / chunkletLocations.size()) + " bytes.");
+
+		// Loaded
+
+		ArrayList<String> notChunklets = new ArrayList<String>();
+		ArrayList<ChunkletStore> chunkletStores = new ArrayList<ChunkletStore>();
+
+		System.out.println("Loading Chunklets:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletLocations.size(); i++) {
+			File chunklet = new File(chunkletLocations.get(i));
+
+			ChunkletStore cStore = deserializeChunkletStore(chunklet);
+
+			if(cStore == null) {
+				notChunklets.add(chunklet.getPath());
+			} else {
+				chunkletStores.add(cStore);
+			}
+
+			Main.updateProgress((double) i / chunkletLocations.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+
+		System.out.println("Loaded: " + chunkletStores.size() + " chunklets.");
+
+		if(!notChunklets.isEmpty()) {
+			System.out.println("The following files are not chunklets:");
+			for(String notChunklet : notChunklets) {
+				System.out.println("\t" + notChunklet);
+			}
+		}
+	}
+
+	private static ChunkletStore deserializeChunkletStore(File location) {
+		ChunkletStore storeIn = null;
+		FileInputStream fileIn = null;
+		ObjectInputStream objIn = null;
+
+		try {
+			fileIn = new FileInputStream(location);
+			objIn = new ObjectInputStream(fileIn);
+			storeIn = (ChunkletStore) objIn.readObject();
+		}
+		catch (IOException ex) {
+			return null;
+		}
+		catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (objIn != null) {
+				try {
+					objIn.close();
+				}
+				catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (fileIn != null) {
+				try {
+					fileIn.close();
+				}
+				catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+
+		return storeIn;
 	}
 }
