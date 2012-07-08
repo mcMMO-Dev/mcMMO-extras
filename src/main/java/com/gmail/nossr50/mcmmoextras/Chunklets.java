@@ -6,11 +6,17 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.gmail.nossr50.util.blockmeta.ChunkletStore;
 import com.gmail.nossr50.util.blockmeta.PrimitiveChunkletStore;
 
 public class Chunklets {
+	Map<String, ChunkletStore> chunklets = new HashMap<String, ChunkletStore>();
+
 	public void analyze(String worldLocation) {
 		File worldDir = new File(worldLocation);
 		if(!worldDir.exists()) {
@@ -132,6 +138,7 @@ public class Chunklets {
 				notChunklets.add(chunklet.getPath());
 			} else {
 				chunkletStores.add(cStore);
+				chunklets.put(chunklet.getPath(), cStore);
 			}
 
 			Main.updateProgress((double) i / chunkletLocations.size());
