@@ -195,7 +195,7 @@ public class Chunklets {
 				}
 			}
 
-			if(trueCount < lowestDensity) lowestDensity = trueCount;
+			if(trueCount < lowestDensity && trueCount != 0) lowestDensity = trueCount;
 			if(trueCount > highestDensity) highestDensity = trueCount;
 
 			sum += trueCount;
