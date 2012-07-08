@@ -97,6 +97,7 @@ public class Chunklets {
 
 		long size = 0;
 
+		System.out.println();
 		System.out.println("Computing file sizes:");
 		Main.updateProgress(0);
 		for(int i = 0; i < chunkletLocations.size(); i++) {
@@ -117,6 +118,7 @@ public class Chunklets {
 		ArrayList<String> notChunklets = new ArrayList<String>();
 		ArrayList<ChunkletStore> chunkletStores = new ArrayList<ChunkletStore>();
 
+		System.out.println();
 		System.out.println("Loading Chunklets:");
 		Main.updateProgress(0);
 		for(int i = 0; i < chunkletLocations.size(); i++) {
