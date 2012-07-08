@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import com.gmail.nossr50.util.blockmeta.ChunkletStore;
@@ -209,10 +210,13 @@ public class Chunklets {
 		Main.updateProgress(1);
 		System.out.println();
 
+		NumberFormat percentFormat = NumberFormat.getPercentInstance();
+		percentFormat.setMaximumFractionDigits(5);
+
 		System.out.println("Density:");
-		System.out.println("\tAverage Density: " + ((double) (sum / chunkletsCount) / 16384));
-		System.out.println("\tHighest Density: " + ((double) highestDensity / 16384));
-		System.out.println("\tLowest Density: " + ((double) lowestDensity / 16384));
+		System.out.println("\tAverage Density: " + percentFormat.format((double) (sum / chunkletsCount) / 16384));
+		System.out.println("\tHighest Density: " + percentFormat.format((double) highestDensity / 16384));
+		System.out.println("\tLowest Density: " + percentFormat.format((double) lowestDensity / 16384));
 		System.out.println("Found " + emptyChunklets.size() + " empty Chunklets.");
 	}
 
