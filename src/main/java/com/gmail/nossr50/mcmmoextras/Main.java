@@ -24,6 +24,14 @@ public class Main {
 				} else {
 					chunklets.upgrade();
 				}
+			} else if (args[2].equalsIgnoreCase("cleanup")) {
+				chunklets.analyze(args[1], true);
+				if (chunklets.chunklets.isEmpty()) {
+					System.out.println("Loaded no chunks");
+					return;
+				} else {
+					chunklets.cleanup();
+				}
 			}
 		}
 	}
@@ -47,6 +55,7 @@ public class Main {
 	private static void printChunkletHelp() {
 		System.out.println("chunklets <world_folder> analyze - Print information about Chunklets for a given world");
 		System.out.println("chunklets <world_folder> upgrade - Update any old-type chunklets to new file format (will run analyze first)");
+		System.out.println("chunklets <world_folder> cleanup - Clean any empty folders and/or empty chunklets (will run analyze first)");
 	}
 
 	private static void printBaseHelp() {

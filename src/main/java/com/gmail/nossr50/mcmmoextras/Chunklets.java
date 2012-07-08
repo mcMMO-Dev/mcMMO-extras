@@ -16,6 +16,8 @@ import com.gmail.nossr50.util.blockmeta.PrimitiveExChunkletStore;
 
 public class Chunklets {
 	Map<String, ChunkletStore> chunklets = new HashMap<String, ChunkletStore>();
+	ArrayList<ChunkletStore> emptyChunkletStores = new ArrayList<ChunkletStore>();
+	File chunkletsDirectory;
 
 	public void analyze(String worldLocation, boolean store) {
 		File worldDir = new File(worldLocation);
@@ -29,6 +31,8 @@ public class Chunklets {
 			System.out.println("Cannot find mcmmo_data folder in: " + worldDir.getPath());
 			return;
 		}
+
+		if(store) chunkletsDirectory = chunkletsDir;
 
 		// Scan
 
@@ -217,6 +221,8 @@ public class Chunklets {
 		Main.updateProgress(1);
 		System.out.println();
 
+		if(store) emptyChunkletStores = emptyChunklets;
+
 		NumberFormat percentFormat = NumberFormat.getPercentInstance();
 		percentFormat.setMaximumFractionDigits(5);
 
@@ -251,6 +257,74 @@ public class Chunklets {
 		Main.updateProgress(1);
 		System.out.println();
 		System.out.println("Upgraded " + upgradeCount + " chunklets.");
+	}
+
+	public void cleanup() {
+		ArrayList<String> chunkletKeys = new ArrayList<String>();
+		chunkletKeys.addAll(chunklets.keySet());
+
+		int cleanChunkletCount = 0;
+		int cleanCxCount = 0;
+		int cleanCzCount = 0;
+
+		System.out.println();
+		System.out.println("Cleaning Chunklets:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletKeys.size(); i++) {
+			ChunkletStore cStore = chunklets.get(chunkletKeys.get(i));
+
+			if(emptyChunkletStores.contains(cStore)) {
+				new File(chunkletKeys.get(i)).delete();
+				cleanChunkletCount++;
+			}
+
+			Main.updateProgress((double) i / chunkletKeys.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+		System.out.println("Removed " + cleanChunkletCount + " chunklets.");
+
+		// Scan
+
+		System.out.println();
+		System.out.println("Cleaning mcmmo_data: ");
+		Main.updateProgress(0);
+
+		String[] cxDirs = chunkletsDirectory.list();
+		for(int i = 0; i < cxDirs.length; i++) {
+			File cxDir = new File(chunkletsDirectory, cxDirs[i]);
+
+			if(!cxDir.isDirectory()) {
+				continue;
+			}
+
+			String[] czDirs = cxDir.list();
+			int emptyCzTemp = 0;
+			for(int j = 0; j < czDirs.length; j++) {
+				File czDir = new File(cxDir, czDirs[j]);
+
+				if(!czDir.isDirectory()) {
+					continue;
+				}
+
+				String[] chunklets = czDir.list();
+				if(chunklets.length == 0) {
+					emptyCzTemp++;
+					czDir.delete();
+					cleanCzCount++;
+				}
+			}
+
+			if(emptyCzTemp == czDirs.length) {
+				cxDir.delete();
+				cleanCxCount++;
+			}
+
+			Main.updateProgress((double) i / cxDirs.length);
+		}
+		Main.updateProgress(1);
+		System.out.println();
+		System.out.println("Removed " + cleanCxCount + cleanCzCount + " empty folders.");
 	}
 
 	private void serializeChunkletStore(ChunkletStore cStore, File location) {
