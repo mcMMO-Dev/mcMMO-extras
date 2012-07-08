@@ -88,5 +88,23 @@ public class Chunklets {
 			}
 		}
 
+		// Size computation
+
+		long size = 0;
+
+		System.out.println("Computing file sizes:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletLocations.size(); i++) {
+			File chunklet = new File(chunkletLocations.get(i));
+
+			size += chunklet.length();
+
+			Main.updateProgress((double) i / chunkletLocations.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+
+		System.out.println("Chunklets are is using: " + size + " bytes.");
+		System.out.println("Average Chunklet size is: " + (size / chunkletLocations.size()) + " bytes.");
 	}
 }
