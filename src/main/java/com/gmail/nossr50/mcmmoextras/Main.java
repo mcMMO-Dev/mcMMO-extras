@@ -12,10 +12,18 @@ public class Main {
 				printChunkletHelp();
 				return;
 			}
+			Chunklets chunklets = new Chunklets();
 			if (args[2].equalsIgnoreCase("analyze")) {
-				Chunklets chunklets = new Chunklets();
 				chunklets.analyze(args[1], false);
 				return;
+			} else if (args[2].equalsIgnoreCase("upgrade")) {
+				chunklets.analyze(args[1], true);
+				if (chunklets.chunklets.isEmpty()) {
+					System.out.println("Loaded no chunks");
+					return;
+				} else {
+					chunklets.upgrade();
+				}
 			}
 		}
 	}
@@ -38,6 +46,7 @@ public class Main {
 
 	private static void printChunkletHelp() {
 		System.out.println("chunklets <world_folder> analyze - Print information about Chunklets for a given world");
+		System.out.println("chunklets <world_folder> upgrade - Update any old-type chunklets to new file format (will run analyze first)");
 	}
 
 	private static void printBaseHelp() {

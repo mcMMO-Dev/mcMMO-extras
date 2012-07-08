@@ -2,17 +2,17 @@ package com.gmail.nossr50.mcmmoextras;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.gmail.nossr50.util.blockmeta.ChunkletStore;
 import com.gmail.nossr50.util.blockmeta.PrimitiveChunkletStore;
+import com.gmail.nossr50.util.blockmeta.PrimitiveExChunkletStore;
 
 public class Chunklets {
 	Map<String, ChunkletStore> chunklets = new HashMap<String, ChunkletStore>();
@@ -225,6 +225,66 @@ public class Chunklets {
 		System.out.println("\tHighest Density: " + percentFormat.format((double) highestDensity / 16384));
 		System.out.println("\tLowest Density: " + percentFormat.format((double) lowestDensity / 16384));
 		System.out.println("Found " + emptyChunklets.size() + " empty Chunklets.");
+	}
+
+	public void upgrade() {
+		ArrayList<String> chunkletKeys = new ArrayList<String>();
+		chunkletKeys.addAll(chunklets.keySet());
+
+		int upgradeCount = 0;
+
+		System.out.println();
+		System.out.println("Upgrading Chunklets:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletKeys.size(); i++) {
+			ChunkletStore cStore = chunklets.get(chunkletKeys.get(i));
+
+			if(cStore instanceof PrimitiveChunkletStore) {
+				ChunkletStore tempStore = new PrimitiveExChunkletStore();
+				tempStore.copyFrom(cStore);
+				serializeChunkletStore(tempStore, new File(chunkletKeys.get(i)));
+				upgradeCount++;
+			}
+
+			Main.updateProgress((double) i / chunkletKeys.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+		System.out.println("Upgraded " + upgradeCount + " chunklets.");
+	}
+
+	private void serializeChunkletStore(ChunkletStore cStore, File location) {
+		FileOutputStream fileOut = null;
+		ObjectOutputStream objOut = null;
+
+		try {
+			fileOut = new FileOutputStream(location);
+			objOut = new ObjectOutputStream(fileOut);
+			objOut.writeObject(cStore);
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			if (objOut != null) {
+				try {
+					objOut.flush();
+					objOut.close();
+				}
+				catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			if (fileOut != null) {
+				try {
+					fileOut.close();
+				}
+				catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private ChunkletStore deserializeChunkletStore(File location) {
