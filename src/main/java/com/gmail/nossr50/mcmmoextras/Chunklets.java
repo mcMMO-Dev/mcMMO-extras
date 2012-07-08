@@ -117,7 +117,7 @@ public class Chunklets {
 		// Loaded
 
 		ArrayList<String> notChunklets = new ArrayList<String>();
-		ArrayList<ChunkletStore> chunkletStores = new ArrayList<ChunkletStore>();
+		ArrayList<ChunkletStore> chunkletStores = new ArrayList<ChunkletStore>(chunkletLocations.size());
 
 		System.out.println();
 		System.out.println("Loading Chunklets:");
