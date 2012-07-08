@@ -111,7 +111,7 @@ public class Chunklets {
 		Main.updateProgress(1);
 		System.out.println();
 
-		System.out.println("Chunklets are is using: " + size + " bytes.");
+		System.out.println("Chunklets are using: " + size + " bytes.");
 		System.out.println("Average Chunklet size is: " + (size / chunkletLocations.size()) + " bytes.");
 
 		// Loaded
