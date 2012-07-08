@@ -169,6 +169,51 @@ public class Chunklets {
 		System.out.println();
 
 		System.out.println(pcsCount + " of " + chunkletsCount + " chunklets are of type PCS");
+
+		// Density checking
+
+		int[] density = new int[chunkletsCount];
+		int lowestDensity = 16384;
+		int highestDensity = 0;
+		int sum = 0;
+
+		ArrayList<ChunkletStore> emptyChunklets = new ArrayList<ChunkletStore>();
+
+		System.out.println();
+		System.out.println("Calculating density of Chunklets:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletStores.size(); i++) {
+			ChunkletStore cStore = chunkletStores.get(i);
+
+			int trueCount = 0;
+
+			for(int x = 0; x < 16; x++) {
+				for(int z = 0; z < 16; z++) {
+					for(int y = 0; y < 64; y++) {
+						if(cStore.isTrue(x, y, z)) trueCount++;
+					}
+				}
+			}
+
+			if(trueCount < lowestDensity) lowestDensity = trueCount;
+			if(trueCount > highestDensity) highestDensity = trueCount;
+
+			sum += trueCount;
+
+			density[i] = trueCount;
+
+			if(trueCount == 0) emptyChunklets.add(cStore);
+
+			Main.updateProgress((double) i / chunkletLocations.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+
+		System.out.println("Density:");
+		System.out.println("\tAverage Density: " + ((double) (sum / chunkletsCount) / 16384));
+		System.out.println("\tHighest Density: " + ((double) highestDensity / 16384));
+		System.out.println("\tLowest Density: " + ((double) lowestDensity / 16384));
+		System.out.println("Found " + emptyChunklets.size() + " empty Chunklets.");
 	}
 
 	private static ChunkletStore deserializeChunkletStore(File location) {
