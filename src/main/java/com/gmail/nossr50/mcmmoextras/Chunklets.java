@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import com.gmail.nossr50.util.blockmeta.ChunkletStore;
+import com.gmail.nossr50.util.blockmeta.PrimitiveChunkletStore;
 
 public class Chunklets {
 	public static void analyze(String worldLocation) {
@@ -145,6 +146,29 @@ public class Chunklets {
 				System.out.println("\t" + notChunklet);
 			}
 		}
+
+		chunkletsCount = chunkletStores.size();
+
+		// Type checking
+
+		int pcsCount = 0;
+
+		System.out.println();
+		System.out.println("Type checking Chunklets:");
+		Main.updateProgress(0);
+		for(int i = 0; i < chunkletStores.size(); i++) {
+			ChunkletStore cStore = chunkletStores.get(i);
+
+			if(cStore instanceof PrimitiveChunkletStore) {
+				pcsCount++;
+			}
+
+			Main.updateProgress((double) i / chunkletLocations.size());
+		}
+		Main.updateProgress(1);
+		System.out.println();
+
+		System.out.println(pcsCount + " of " + chunkletsCount + " chunklets are of type PCS");
 	}
 
 	private static ChunkletStore deserializeChunkletStore(File location) {
