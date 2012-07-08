@@ -205,7 +205,7 @@ public class Chunklets {
 
 			if(trueCount == 0) emptyChunklets.add(cStore);
 
-			Main.updateProgress((double) i / chunkletLocations.size());
+			Main.updateProgress((double) i / chunkletStores.size());
 		}
 		Main.updateProgress(1);
 		System.out.println();
