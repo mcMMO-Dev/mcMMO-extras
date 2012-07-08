@@ -11,7 +11,7 @@ import com.gmail.nossr50.util.blockmeta.ChunkletStore;
 import com.gmail.nossr50.util.blockmeta.PrimitiveChunkletStore;
 
 public class Chunklets {
-	public static void analyze(String worldLocation) {
+	public void analyze(String worldLocation) {
 		File worldDir = new File(worldLocation);
 		if(!worldDir.exists()) {
 			System.out.println("Cannot find world at: " + worldDir.getPath());
@@ -220,7 +220,7 @@ public class Chunklets {
 		System.out.println("Found " + emptyChunklets.size() + " empty Chunklets.");
 	}
 
-	private static ChunkletStore deserializeChunkletStore(File location) {
+	private ChunkletStore deserializeChunkletStore(File location) {
 		ChunkletStore storeIn = null;
 		FileInputStream fileIn = null;
 		ObjectInputStream objIn = null;
